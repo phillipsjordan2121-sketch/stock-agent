@@ -2,25 +2,33 @@ name: Daily Stock Picks
 
 on:
   schedule:
-    # 5:00 AM Pacific Daylight Time = 12:00 UTC (runs Mon-Fri)
-    - cron: "0 12 * * 1-5"
-  workflow_dispatch: # allows manual trigger from GitHub UI
+    - cron: "45 11 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  run-agent:
+  daily-pipeline:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: pip install anthropic requests
+
+      - name: Check and close positions
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINN_HUB_API_KEY }}
+        run: python position_checker.py
+
+      - name: Generate learning summary
+        run: python learning_summary.py
 
       - name: Run stock agent
         env:
@@ -30,3 +38,11 @@ jobs:
           GMAIL_APP_PASS:    ${{ secrets.GMAIL_APP_PASSWORD }}
           RECIPIENT_EMAIL:   ${{ secrets.EMAIL_RECIPIENT }}
         run: python main.py
+
+      - name: Commit all updates
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add portfolio.json trades.json rejected.json learning_context.txt
+          git diff --staged --quiet || git commit -m "Daily pipeline update [skip ci]"
+          git push || (git pull --rebase && git push)
