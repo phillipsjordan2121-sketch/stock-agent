@@ -579,10 +579,7 @@ def process_picks(parsed, data, portfolio, trades, rejected, today_str):
 
         invested = float(portfolio.get("total_invested", 0.0))
         if invested + target_dollars > EXPOSURE_CEILING * total_value:
-            room = EXPOSURE_CEILING * total_value - invested
-            if room <= 0:
-                rejected.append(_reject(p, today_str, "exposure_ceiling", conf, sigs, deds)); continue
-            target_dollars = room
+            rejected.append(_reject(p, today_str, "exposure_ceiling", conf, sigs, deds)); continue
 
         if target_dollars > float(portfolio.get("cash", 0.0)):
             target_dollars = float(portfolio.get("cash", 0.0))
