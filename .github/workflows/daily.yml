@@ -1,0 +1,32 @@
+name: Daily Stock Picks
+
+on:
+  schedule:
+    # 5:00 AM Pacific Daylight Time = 12:00 UTC (runs Mon–Fri)
+    - cron: "0 12 * * 1-5"
+  workflow_dispatch: # allows manual trigger from GitHub UI
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install anthropic requests
+
+      - name: Run stock agent
+        env:
+          FINNHUB_API_KEY:   ${{ secrets.FINNHUB_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_USER:        ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASS:    ${{ secrets.GMAIL_APP_PASS }}
+          RECIPIENT_EMAIL:   ${{ secrets.RECIPIENT_EMAIL }}
+        run: python main.py
