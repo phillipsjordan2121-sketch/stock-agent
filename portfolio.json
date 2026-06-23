@@ -1,10 +1,10 @@
 {
   "mode": "paper",
-  "starting_capital": 100000.00,
-  "cash": 100000.00,
+  "starting_capital": 100000.0,
+  "cash": 100000.0,
   "total_invested": 0.0,
   "portfolio_value": 0.0,
-  "total_value": 100000.00,
+  "total_value": 100000.0,
   "total_pnl_pct": 0.0,
   "positions": {},
   "last_updated": "2026-06-23",

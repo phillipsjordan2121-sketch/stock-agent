@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "ticker": "PLTR",
+    "date": "2026-06-23",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AMAT",
+    "date": "2026-06-23",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "NOW",
+    "date": "2026-06-23",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "QCOM",
+    "date": "2026-06-23",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "INTC",
+    "date": "2026-06-23",
+    "rejection_reason": "confidence_below_threshold: score=5 < 60",
+    "confidence": 5,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": [
+      "late_week_entry"
+    ]
+  }
+]
