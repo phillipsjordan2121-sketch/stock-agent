@@ -1,0 +1,4 @@
+=== SELF-LEARNING SUMMARY ===
+Insufficient trade history for calibration. Using base signal weights.
+Apply no calibration adjustments today.
+=== END SUMMARY ===
