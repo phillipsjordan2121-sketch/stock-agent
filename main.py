@@ -8,11 +8,11 @@ from email.mime.text import MIMEText
 import anthropic
 
 # ââ Config ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-FINNHUB_API_KEY   = os.environ["FINN_HUB_API_KEY"]
+FINNHUB_API_KEY   = os.environ["FINNHUB_API_KEY"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 GMAIL_USER        = os.environ["GMAIL_USER"]        # your gmail address
-GMAIL_APP_PASS    = os.environ["GMAIL_APP_PASSWORD"]    # gmail app password
-RECIPIENT_EMAIL   = os.environ.get("EMAIL_RECIPIENT", GMAIL_USER)
+GMAIL_APP_PASS    = os.environ["GMAIL_APP_PASS"]    # gmail app password
+RECIPIENT_EMAIL   = os.environ.get("RECIPIENT_EMAIL", GMAIL_USER)
 
 CONFIDENCE_THRESHOLD = 80  # only send picks at or above this %
 
