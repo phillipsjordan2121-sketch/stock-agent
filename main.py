@@ -345,6 +345,23 @@ def gather_market_data():
         label = "confirmed" if m is True else ("no" if m is False else "unknown")
         mom_lines.append(f"{t}={label}")
 
+    # -- Data-health diagnostics (visible in the Actions log each run) --
+    quotes_ok = sum(1 for v in prices.values() if v)
+    tickers_with_news = len({ln.split("]")[0].lstrip("[") for ln in company_news})
+    mom_conf = sum(1 for v in momentum.values() if v is True)
+    mom_no   = sum(1 for v in momentum.values() if v is False)
+    mom_unk  = sum(1 for v in momentum.values() if v is None)
+    vix_str = f"{vix:.1f}" if vix is not None else "unavailable"
+    print("---- DATA HEALTH ----")
+    print(f"  Quotes OK:       {quotes_ok}/{len(WATCHLIST)}")
+    print(f"  Market news:     {len(market_news)} article(s)")
+    print(f"  Company news:    {len(company_news)} line(s) across {tickers_with_news} ticker(s)")
+    print(f"  Analyst records: {len(analyst)}/{len(WATCHLIST)}")
+    print(f"  Price targets:   {len(targets)}/{len(WATCHLIST)}")
+    print(f"  Momentum:        {mom_conf} confirmed / {mom_no} no / {mom_unk} unknown")
+    print(f"  SPY trend:       {spy_trend}   VIX: {vix_str}")
+    print("---------------------")
+
     return {
         "market_news": market_news,
         "company_news": company_news,
