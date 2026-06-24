@@ -41,6 +41,7 @@ CONFIDENCE_THRESHOLD    = 60
 EXPOSURE_CEILING        = 0.35
 MAX_SINGLE_POSITION_PCT = 0.10
 PORTFOLIO_STOP_PCT      = -0.08
+MOMENTUM_DP_PCT         = 3.0     # free-tier proxy: intraday % change >= 3% counts as momentum (when candles gated)
 
 PORTFOLIO_FILE = "portfolio.json"
 TRADES_FILE    = "trades.json"
@@ -151,6 +152,31 @@ def fetch_quote(ticker):
     except Exception as e:
         print(f"  [WARN] fetch_quote({ticker}) failed: {e}")
         return None
+
+
+def fetch_quote_data(ticker):
+    """One /quote call -> {'price': float|None, 'dp': float|None}. dp = intraday % change."""
+    try:
+        data = _get("https://finnhub.io/api/v1/quote", {"symbol": ticker})
+        cur = data.get("c", 0.0)
+        price = float(cur) if cur else (float(data.get("pc", 0.0)) or None)
+        dp = data.get("dp")
+        dp = float(dp) if dp is not None else None
+        return {"price": price, "dp": dp}
+    except Exception as e:
+        print(f"  [WARN] fetch_quote_data({ticker}) failed: {e}")
+        return None
+
+
+def candle_available():
+    """Probe whether Finnhub's /stock/candle endpoint is accessible on this tier."""
+    try:
+        now = int(time.time())
+        data = _get("https://finnhub.io/api/v1/stock/candle",
+                    {"symbol": "AAPL", "resolution": "D", "from": now - 7 * 86400, "to": now})
+        return data.get("s") == "ok"
+    except Exception:
+        return False
 
 
 def fetch_market_news(lookback_hours, max_articles):
@@ -282,16 +308,28 @@ def gather_market_data():
     vix = fetch_vix()
     time.sleep(FINNHUB_SLEEP)
 
+    # Probe the candle endpoint once. If it's gated on this Finnhub tier, derive
+    # momentum from each /quote's intraday % change (dp) instead of 5-day candles.
+    candle_ok = candle_available()
+    time.sleep(FINNHUB_SLEEP)
+    print(f"Candle endpoint available: {candle_ok} "
+          f"(momentum via {'5-day candles' if candle_ok else 'intraday %-change proxy'})")
+
     company_news, momentum, analyst, targets, prices = [], {}, [], [], {}
 
     print(f"Sweeping {len(WATCHLIST)} tickers (rate-limited)...")
     for t in WATCHLIST:
-        price = fetch_quote(t); time.sleep(FINNHUB_SLEEP)
+        qd = fetch_quote_data(t); time.sleep(FINNHUB_SLEEP)
+        price = qd["price"] if qd else None
         prices[t] = price
 
         company_news += fetch_company_news(t, lookback); time.sleep(FINNHUB_SLEEP)
 
-        momentum[t] = fetch_momentum(t); time.sleep(FINNHUB_SLEEP)
+        if candle_ok:
+            momentum[t] = fetch_momentum(t); time.sleep(FINNHUB_SLEEP)
+        else:
+            dp = qd.get("dp") if qd else None
+            momentum[t] = (dp >= MOMENTUM_DP_PCT) if dp is not None else None
 
         a = fetch_analyst(t); time.sleep(FINNHUB_SLEEP)
         if a:
