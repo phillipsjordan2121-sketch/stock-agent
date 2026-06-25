@@ -90,5 +90,72 @@
       "company_specific_news"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "MU",
+    "date": "2026-06-25",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "earnings_beat",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AMAT",
+    "date": "2026-06-25",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "secondary_beneficiary"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "STX",
+    "date": "2026-06-25",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "secondary_beneficiary"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "WDC",
+    "date": "2026-06-25",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "secondary_beneficiary"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "QCOM",
+    "date": "2026-06-25",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "secondary_beneficiary"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RKLB",
+    "date": "2026-06-25",
+    "rejection_reason": "confidence_below_threshold: score=0 < 60",
+    "confidence": 0,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": [
+      "sector_tailwind_only"
+    ]
   }
 ]
