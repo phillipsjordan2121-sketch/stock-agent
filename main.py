@@ -24,7 +24,7 @@ import requests
 from datetime import datetime, timedelta, timezone, date
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import anthropic
+import anthropic  # Claude API client
 
 # -- Secrets / env -------------------------------------------------------------
 FINNHUB_API_KEY   = os.environ.get("FINNHUB_API_KEY", "")
@@ -36,12 +36,18 @@ RECIPIENT_EMAIL   = os.environ.get("RECIPIENT_EMAIL", GMAIL_USER)
 # -- Tunable parameters --------------------------------------------------------
 CLAUDE_MODEL            = "claude-haiku-4-5-20251001"
 FINNHUB_SLEEP           = 1.1
-MAX_PICKS_PER_DAY       = 3
+MAX_PICKS_PER_DAY       = None    # None = no per-run cap; EXPOSURE_CEILING is the only limit on new buys
 CONFIDENCE_THRESHOLD    = 60
 EXPOSURE_CEILING        = 0.35
 MAX_SINGLE_POSITION_PCT = 0.10
 PORTFOLIO_STOP_PCT      = -0.08
 MOMENTUM_DP_PCT         = 3.0     # free-tier proxy: intraday % change >= 3% counts as momentum (when candles gated)
+
+# -- Two-stage funnel (lets the universe scale to ~200 tickers) -----------------
+# Stage 1 screens the WHOLE watchlist with 1 cheap quote call each. Stage 2 runs
+# the expensive analyst / price-target / company-news calls only on the shortlist.
+SCREEN_DP_PCT  = 2.5     # |intraday % change| >= this flags a ticker for deep research
+MAX_DEEP_DIVE  = 30      # cap on stage-2 shortlist size (bounds call budget + prompt size)
 
 PORTFOLIO_FILE = "portfolio.json"
 TRADES_FILE    = "trades.json"
@@ -50,32 +56,164 @@ LEARNING_FILE  = "learning_context.txt"
 
 # -- Watchlist + sectors -------------------------------------------------------
 SECTOR_MAP = {
+    # -- semiconductors (chips / design) --
     "NVDA": "semiconductor", "AMD": "semiconductor", "TSM": "semiconductor",
     "AVGO": "semiconductor", "MRVL": "semiconductor", "QCOM": "semiconductor",
     "INTC": "semiconductor", "MU": "semiconductor", "ARM": "semiconductor",
+    "TXN": "semiconductor", "ADI": "semiconductor", "NXPI": "semiconductor",
+    "MCHP": "semiconductor", "ON": "semiconductor", "MPWR": "semiconductor",
+    "SWKS": "semiconductor", "QRVO": "semiconductor", "LSCC": "semiconductor",
+    "RMBS": "semiconductor", "ALGM": "semiconductor", "SLAB": "semiconductor",
+    "AMBA": "semiconductor", "CRUS": "semiconductor", "SITM": "semiconductor",
+    "POWI": "semiconductor", "DIOD": "semiconductor", "SMTC": "semiconductor",
+    "MTSI": "semiconductor", "WOLF": "semiconductor", "NVTS": "semiconductor",
+    "SYNA": "semiconductor", "CEVA": "semiconductor", "INDI": "semiconductor",
+    # -- semiconductor equipment / test / packaging --
     "AMAT": "semi_equipment", "LRCX": "semi_equipment", "KLAC": "semi_equipment",
-    "ASML": "semi_equipment",
-    "SMCI": "hardware", "DELL": "hardware", "HPE": "hardware",
+    "ASML": "semi_equipment", "KLIC": "semi_equipment", "ENTG": "semi_equipment",
+    "ONTO": "semi_equipment", "ICHR": "semi_equipment", "AEHR": "semi_equipment",
+    "CAMT": "semi_equipment", "NVMI": "semi_equipment", "VECO": "semi_equipment",
+    "ACLS": "semi_equipment", "COHU": "semi_equipment", "FORM": "semi_equipment",
+    "AMKR": "semi_equipment", "TER": "semi_equipment",
+    # -- hardware / devices / storage --
+    "SMCI": "hardware", "DELL": "hardware", "HPE": "hardware", "HPQ": "hardware",
+    "AAPL": "hardware", "WDC": "hardware", "STX": "hardware", "NTAP": "hardware",
+    "PSTG": "hardware", "LOGI": "hardware", "SONO": "hardware", "GPRO": "hardware",
+    # -- networking / optical / comms equipment --
+    "ANET": "networking", "CSCO": "networking", "JNPR": "networking",
+    "FFIV": "networking", "EXTR": "networking", "CIEN": "networking",
+    "LITE": "networking", "COMM": "networking", "UI": "networking",
+    "DGII": "networking", "NTGR": "networking", "CALX": "networking",
+    "COHR": "networking", "AAOI": "networking", "VIAV": "networking",
+    "AKAM": "networking",
+    # -- cloud / mega-cap AI platforms --
     "MSFT": "cloud_ai", "GOOGL": "cloud_ai", "AMZN": "cloud_ai",
-    "META": "cloud_ai", "ORCL": "cloud_ai",
+    "META": "cloud_ai", "ORCL": "cloud_ai", "IBM": "cloud_ai",
+    # -- software (SaaS / application / infra) --
     "CRM": "software", "SNOW": "software", "PLTR": "software", "NOW": "software",
-    "DDOG": "software", "MDB": "software", "AI": "software",
+    "DDOG": "software", "MDB": "software", "AI": "software", "ADBE": "software",
+    "INTU": "software", "WDAY": "software", "TEAM": "software", "SHOP": "software",
+    "TWLO": "software", "DOCU": "software", "HUBS": "software", "ZM": "software",
+    "DOCN": "software", "GTLB": "software", "PATH": "software", "U": "software",
+    "BILL": "software", "ASAN": "software", "MNDY": "software", "FRSH": "software",
+    "APPN": "software", "BRZE": "software", "CFLT": "software", "DV": "software",
+    "ESTC": "software", "PD": "software", "PCOR": "software", "BSY": "software",
+    "TYL": "software", "MANH": "software", "PEGA": "software", "DT": "software",
+    "NICE": "software",
+    # -- cybersecurity --
     "PANW": "cybersecurity", "NET": "cybersecurity", "CRWD": "cybersecurity",
-    "IONQ": "quantum",
+    "ZS": "cybersecurity", "OKTA": "cybersecurity", "S": "cybersecurity",
+    "FTNT": "cybersecurity", "CYBR": "cybersecurity", "TENB": "cybersecurity",
+    "QLYS": "cybersecurity", "RPD": "cybersecurity", "VRNS": "cybersecurity",
+    "CHKP": "cybersecurity", "GEN": "cybersecurity",
+    # -- internet / e-commerce / adtech --
+    "GOOG": "internet", "BABA": "internet", "PDD": "internet", "MELI": "internet",
+    "SE": "internet", "CPNG": "internet", "ETSY": "internet", "EBAY": "internet",
+    "PINS": "internet", "SNAP": "internet", "RDDT": "internet", "DASH": "internet",
+    "ABNB": "internet", "UBER": "internet", "LYFT": "internet", "BKNG": "internet",
+    # -- fintech / payments --
+    "PYPL": "fintech", "XYZ": "fintech", "FI": "fintech", "GPN": "fintech",
+    "V": "fintech", "MA": "fintech", "COIN": "fintech", "HOOD": "fintech",
+    "SOFI": "fintech", "AFRM": "fintech", "UPST": "fintech", "NU": "fintech",
+    "TOST": "fintech", "FOUR": "fintech", "MQ": "fintech", "FLYW": "fintech",
+    # -- EV / autonomous / auto tech --
+    "TSLA": "ev_auto_tech", "RIVN": "ev_auto_tech", "LCID": "ev_auto_tech",
+    "NIO": "ev_auto_tech", "XPEV": "ev_auto_tech", "LI": "ev_auto_tech",
+    "MBLY": "ev_auto_tech", "APTV": "ev_auto_tech", "QS": "ev_auto_tech",
+    "CHPT": "ev_auto_tech",
+    # -- IT services / consulting --
+    "ACN": "it_services", "INFY": "it_services", "CTSH": "it_services",
+    "EPAM": "it_services", "GLOB": "it_services", "DXC": "it_services",
+    "IT": "it_services", "CDW": "it_services",
+    # -- quantum --
+    "IONQ": "quantum", "RGTI": "quantum", "QBTS": "quantum", "QUBT": "quantum",
+    # -- media / streaming --
+    "NFLX": "media_streaming", "DIS": "media_streaming", "SPOT": "media_streaming",
+    "ROKU": "media_streaming", "WBD": "media_streaming", "PARA": "media_streaming",
+    # -- space / defense tech --
+    "RKLB": "space_defense_tech", "ASTS": "space_defense_tech",
+    "ACHR": "space_defense_tech", "JOBY": "space_defense_tech",
+    "KTOS": "space_defense_tech",
 }
 WATCHLIST = list(SECTOR_MAP.keys())
 
 COMPANY_NAMES = {
+    # semiconductors
     "NVDA": "NVIDIA Corporation", "AMD": "Advanced Micro Devices",
     "TSM": "Taiwan Semiconductor", "AVGO": "Broadcom", "MRVL": "Marvell Technology",
     "QCOM": "Qualcomm", "INTC": "Intel", "MU": "Micron Technology", "ARM": "Arm Holdings",
+    "TXN": "Texas Instruments", "ADI": "Analog Devices", "NXPI": "NXP Semiconductors",
+    "MCHP": "Microchip Technology", "ON": "ON Semiconductor", "MPWR": "Monolithic Power Systems",
+    "SWKS": "Skyworks Solutions", "QRVO": "Qorvo", "LSCC": "Lattice Semiconductor",
+    "RMBS": "Rambus", "ALGM": "Allegro MicroSystems", "SLAB": "Silicon Laboratories",
+    "AMBA": "Ambarella", "CRUS": "Cirrus Logic", "SITM": "SiTime",
+    "POWI": "Power Integrations", "DIOD": "Diodes Incorporated", "SMTC": "Semtech",
+    "MTSI": "MACOM Technology", "WOLF": "Wolfspeed", "NVTS": "Navitas Semiconductor",
+    "SYNA": "Synaptics", "CEVA": "Ceva", "INDI": "indie Semiconductor",
+    # semi equipment
     "AMAT": "Applied Materials", "LRCX": "Lam Research", "KLAC": "KLA Corporation",
-    "ASML": "ASML Holding", "SMCI": "Super Micro Computer", "DELL": "Dell Technologies",
-    "HPE": "Hewlett Packard Enterprise", "MSFT": "Microsoft", "GOOGL": "Alphabet",
-    "AMZN": "Amazon", "META": "Meta Platforms", "ORCL": "Oracle", "CRM": "Salesforce",
-    "SNOW": "Snowflake", "PLTR": "Palantir", "NOW": "ServiceNow", "DDOG": "Datadog",
-    "MDB": "MongoDB", "AI": "C3.ai", "PANW": "Palo Alto Networks", "NET": "Cloudflare",
-    "CRWD": "CrowdStrike", "IONQ": "IonQ",
+    "ASML": "ASML Holding", "KLIC": "Kulicke and Soffa", "ENTG": "Entegris",
+    "ONTO": "Onto Innovation", "ICHR": "Ichor Holdings", "AEHR": "Aehr Test Systems",
+    "CAMT": "Camtek", "NVMI": "Nova", "VECO": "Veeco Instruments",
+    "ACLS": "Axcelis Technologies", "COHU": "Cohu", "FORM": "FormFactor",
+    "AMKR": "Amkor Technology", "TER": "Teradyne",
+    # hardware
+    "SMCI": "Super Micro Computer", "DELL": "Dell Technologies",
+    "HPE": "Hewlett Packard Enterprise", "HPQ": "HP Inc", "AAPL": "Apple",
+    "WDC": "Western Digital", "STX": "Seagate Technology", "NTAP": "NetApp",
+    "PSTG": "Pure Storage", "LOGI": "Logitech", "SONO": "Sonos", "GPRO": "GoPro",
+    # networking
+    "ANET": "Arista Networks", "CSCO": "Cisco Systems", "JNPR": "Juniper Networks",
+    "FFIV": "F5 Networks", "EXTR": "Extreme Networks", "CIEN": "Ciena",
+    "LITE": "Lumentum", "COMM": "CommScope", "UI": "Ubiquiti",
+    "DGII": "Digi International", "NTGR": "Netgear", "CALX": "Calix",
+    "COHR": "Coherent", "AAOI": "Applied Optoelectronics", "VIAV": "Viavi Solutions",
+    "AKAM": "Akamai Technologies",
+    # cloud / mega-cap
+    "MSFT": "Microsoft", "GOOGL": "Alphabet", "AMZN": "Amazon", "META": "Meta Platforms",
+    "ORCL": "Oracle", "IBM": "International Business Machines",
+    # software
+    "CRM": "Salesforce", "SNOW": "Snowflake", "PLTR": "Palantir", "NOW": "ServiceNow",
+    "DDOG": "Datadog", "MDB": "MongoDB", "AI": "C3.ai", "ADBE": "Adobe",
+    "INTU": "Intuit", "WDAY": "Workday", "TEAM": "Atlassian", "SHOP": "Shopify",
+    "TWLO": "Twilio", "DOCU": "Docusign", "HUBS": "HubSpot", "ZM": "Zoom Communications",
+    "DOCN": "DigitalOcean", "GTLB": "GitLab", "PATH": "UiPath", "U": "Unity Software",
+    "BILL": "BILL Holdings", "ASAN": "Asana", "MNDY": "Monday.com", "FRSH": "Freshworks",
+    "APPN": "Appian", "BRZE": "Braze", "CFLT": "Confluent", "DV": "DoubleVerify",
+    "ESTC": "Elastic", "PD": "PagerDuty", "PCOR": "Procore Technologies",
+    "BSY": "Bentley Systems", "TYL": "Tyler Technologies", "MANH": "Manhattan Associates",
+    "PEGA": "Pegasystems", "DT": "Dynatrace", "NICE": "NICE",
+    # cybersecurity
+    "PANW": "Palo Alto Networks", "NET": "Cloudflare", "CRWD": "CrowdStrike",
+    "ZS": "Zscaler", "OKTA": "Okta", "S": "SentinelOne", "FTNT": "Fortinet",
+    "CYBR": "CyberArk", "TENB": "Tenable", "QLYS": "Qualys", "RPD": "Rapid7",
+    "VRNS": "Varonis", "CHKP": "Check Point Software", "GEN": "Gen Digital",
+    # internet
+    "GOOG": "Alphabet", "BABA": "Alibaba", "PDD": "PDD Holdings", "MELI": "MercadoLibre",
+    "SE": "Sea Limited", "CPNG": "Coupang", "ETSY": "Etsy", "EBAY": "eBay",
+    "PINS": "Pinterest", "SNAP": "Snap", "RDDT": "Reddit", "DASH": "DoorDash",
+    "ABNB": "Airbnb", "UBER": "Uber Technologies", "LYFT": "Lyft", "BKNG": "Booking Holdings",
+    # fintech
+    "PYPL": "PayPal", "XYZ": "Block", "FI": "Fiserv", "GPN": "Global Payments",
+    "V": "Visa", "MA": "Mastercard", "COIN": "Coinbase", "HOOD": "Robinhood",
+    "SOFI": "SoFi Technologies", "AFRM": "Affirm", "UPST": "Upstart", "NU": "Nu Holdings",
+    "TOST": "Toast", "FOUR": "Shift4 Payments", "MQ": "Marqeta", "FLYW": "Flywire",
+    # EV / auto tech
+    "TSLA": "Tesla", "RIVN": "Rivian", "LCID": "Lucid Group", "NIO": "NIO",
+    "XPEV": "XPeng", "LI": "Li Auto", "MBLY": "Mobileye", "APTV": "Aptiv",
+    "QS": "QuantumScape", "CHPT": "ChargePoint",
+    # IT services
+    "ACN": "Accenture", "INFY": "Infosys", "CTSH": "Cognizant", "EPAM": "EPAM Systems",
+    "GLOB": "Globant", "DXC": "DXC Technology", "IT": "Gartner", "CDW": "CDW Corporation",
+    # quantum
+    "IONQ": "IonQ", "RGTI": "Rigetti Computing", "QBTS": "D-Wave Quantum",
+    "QUBT": "Quantum Computing",
+    # media / streaming
+    "NFLX": "Netflix", "DIS": "Walt Disney", "SPOT": "Spotify", "ROKU": "Roku",
+    "WBD": "Warner Bros Discovery", "PARA": "Paramount Global",
+    # space / defense tech
+    "RKLB": "Rocket Lab", "ASTS": "AST SpaceMobile", "ACHR": "Archer Aviation",
+    "JOBY": "Joby Aviation", "KTOS": "Kratos Defense",
 }
 
 IGNORED_KEYWORDS = ["options alert", "shareholder lawsuit", "technical analysis", "form 4"]
@@ -97,7 +235,6 @@ SIGNAL_POINTS = {
 DEDUCTION_POINTS = {
     "sector_tailwind_only": -30,
     "mixed_signals":        -15,
-    "correlated_pick":      -15,
     "high_vix":             -10,
     "late_week_entry":       -5,
 }
@@ -293,8 +430,58 @@ def fetch_price_target(ticker, current_price):
         return None
 
 
-def gather_market_data():
-    """One rate-limited sweep. Returns context blocks + a price map."""
+def _name_keywords():
+    """Distinctive lowercase keyword per ticker for screening market-news headlines.
+
+    Uses the first word of the company name when it's >= 5 chars (e.g. 'nvidia',
+    'palantir', 'broadcom'); shorter/common first words (Sea, HP, F5) are skipped to
+    avoid false positives -- those names still get caught by the price-mover screen.
+    """
+    kws = {}
+    for t, name in COMPANY_NAMES.items():
+        first = name.split()[0].lower()
+        kws[t] = first if len(first) >= 5 else None
+    return kws
+
+
+def _news_mentioned(market_news, keywords):
+    """Tickers whose company-name keyword appears anywhere in the market-news text."""
+    blob = " ".join(market_news).lower()
+    return {t for t, kw in keywords.items() if kw and kw in blob}
+
+
+def _build_shortlist(dp_map, market_news, held):
+    """Pick which tickers earn the expensive stage-2 deep dive.
+
+    Sources: open positions (always re-researched), abnormal intraday movers, and
+    names referenced in today's market news. Ranked held-first, then by |move|, and
+    capped at MAX_DEEP_DIVE. Falls back to the biggest movers on a quiet day.
+    """
+    movers = {t for t, dp in dp_map.items() if dp is not None and abs(dp) >= SCREEN_DP_PCT}
+    mentioned = _news_mentioned(market_news, _name_keywords())
+    candidates = movers | mentioned | held
+
+    ranked = sorted(
+        candidates,
+        key=lambda t: (t in held, abs(dp_map.get(t) or 0.0), t in mentioned),
+        reverse=True,
+    )
+    if len(ranked) < 10:  # quiet day -> deep-dive the biggest movers anyway
+        for t in sorted(WATCHLIST, key=lambda t: abs(dp_map.get(t) or 0.0), reverse=True):
+            if t not in ranked:
+                ranked.append(t)
+            if len(ranked) >= 10:
+                break
+    return ranked[:MAX_DEEP_DIVE], movers, mentioned
+
+
+def gather_market_data(portfolio):
+    """Two-stage rate-limited sweep. Returns context blocks + a price map.
+
+    Stage 1: one cheap /quote call per ticker across the FULL universe -> price +
+    intraday % change (the momentum proxy and the deep-dive screen).
+    Stage 2: company news + analyst recs + price targets for the shortlist only.
+    """
     is_monday = datetime.now(timezone.utc).weekday() == 0
     lookback = 72 if is_monday else 24
     max_articles = 60 if is_monday else 40
@@ -308,58 +495,62 @@ def gather_market_data():
     vix = fetch_vix()
     time.sleep(FINNHUB_SLEEP)
 
-    # Probe the candle endpoint once. If it's gated on this Finnhub tier, derive
-    # momentum from each /quote's intraday % change (dp) instead of 5-day candles.
-    candle_ok = candle_available()
-    time.sleep(FINNHUB_SLEEP)
-    print(f"Candle endpoint available: {candle_ok} "
-          f"(momentum via {'5-day candles' if candle_ok else 'intraday %-change proxy'})")
-
-    company_news, momentum, analyst, targets, prices = [], {}, [], [], {}
-
-    print(f"Sweeping {len(WATCHLIST)} tickers (rate-limited)...")
+    # ---- STAGE 1: cheap screen over the FULL universe (1 quote call each) ----
+    # Momentum uses the intraday %-change (dp) proxy universe-wide; this avoids a
+    # per-ticker candle call (often premium-gated anyway) so 200 tickers stay cheap.
+    print(f"STAGE 1: screening {len(WATCHLIST)} tickers (1 quote call each)...")
+    prices, dp_map, momentum = {}, {}, {}
     for t in WATCHLIST:
         qd = fetch_quote_data(t); time.sleep(FINNHUB_SLEEP)
         price = qd["price"] if qd else None
+        dp = qd.get("dp") if qd else None
         prices[t] = price
+        dp_map[t] = dp
+        momentum[t] = (dp >= MOMENTUM_DP_PCT) if dp is not None else None
 
+    held = set(portfolio.get("positions", {}).keys())
+    shortlist, movers, mentioned = _build_shortlist(dp_map, market_news, held)
+    print(f"  Movers(|dp|>={SCREEN_DP_PCT}%): {len(movers)} | news-mentioned: {len(mentioned)} "
+          f"| held: {len(held)} | deep-diving: {len(shortlist)}/{MAX_DEEP_DIVE}")
+
+    # ---- STAGE 2: deep research on the shortlist only ----
+    print(f"STAGE 2: company news + analyst + targets on {len(shortlist)} ticker(s)...")
+    company_news, analyst, targets = [], [], []
+    for t in shortlist:
         company_news += fetch_company_news(t, lookback); time.sleep(FINNHUB_SLEEP)
-
-        if candle_ok:
-            momentum[t] = fetch_momentum(t); time.sleep(FINNHUB_SLEEP)
-        else:
-            dp = qd.get("dp") if qd else None
-            momentum[t] = (dp >= MOMENTUM_DP_PCT) if dp is not None else None
-
         a = fetch_analyst(t); time.sleep(FINNHUB_SLEEP)
         if a:
             analyst.append(a)
-
-        pt = fetch_price_target(t, price); time.sleep(FINNHUB_SLEEP)
+        pt = fetch_price_target(t, prices.get(t)); time.sleep(FINNHUB_SLEEP)
         if pt:
             targets.append(pt)
 
+    # Momentum block: shortlist only (keeps the prompt tight at 200-ticker scale).
     mom_lines = []
-    for t in WATCHLIST:
+    for t in shortlist:
         m = momentum[t]
         label = "confirmed" if m is True else ("no" if m is False else "unknown")
-        mom_lines.append(f"{t}={label}")
+        dp = dp_map.get(t)
+        dp_str = f"{dp:+.1f}%" if dp is not None else "n/a"
+        mom_lines.append(f"{t}={label}({dp_str})")
 
     # -- Data-health diagnostics (visible in the Actions log each run) --
     quotes_ok = sum(1 for v in prices.values() if v)
     tickers_with_news = len({ln.split("]")[0].lstrip("[") for ln in company_news})
     mom_conf = sum(1 for v in momentum.values() if v is True)
-    mom_no   = sum(1 for v in momentum.values() if v is False)
-    mom_unk  = sum(1 for v in momentum.values() if v is None)
     vix_str = f"{vix:.1f}" if vix is not None else "unavailable"
+    est_calls = 3 + len(WATCHLIST) + 3 * len(shortlist)
     print("---- DATA HEALTH ----")
-    print(f"  Quotes OK:       {quotes_ok}/{len(WATCHLIST)}")
+    print(f"  Universe:        {len(WATCHLIST)} tickers")
+    print(f"  Stage-1 quotes:  {quotes_ok}/{len(WATCHLIST)} OK")
+    print(f"  Shortlist:       {len(shortlist)} deep-dived")
     print(f"  Market news:     {len(market_news)} article(s)")
     print(f"  Company news:    {len(company_news)} line(s) across {tickers_with_news} ticker(s)")
-    print(f"  Analyst records: {len(analyst)}/{len(WATCHLIST)}")
-    print(f"  Price targets:   {len(targets)}/{len(WATCHLIST)}")
-    print(f"  Momentum:        {mom_conf} confirmed / {mom_no} no / {mom_unk} unknown")
+    print(f"  Analyst records: {len(analyst)}/{len(shortlist)}")
+    print(f"  Price targets:   {len(targets)}/{len(shortlist)}")
+    print(f"  Momentum:        {mom_conf} confirmed (universe-wide, dp proxy)")
     print(f"  SPY trend:       {spy_trend}   VIX: {vix_str}")
+    print(f"  ~Finnhub calls:  {est_calls}  (~{est_calls * FINNHUB_SLEEP / 60:.1f} min sweep)")
     print("---------------------")
 
     return {
@@ -372,6 +563,7 @@ def gather_market_data():
         "analyst": analyst,
         "targets": targets,
         "prices": prices,
+        "shortlist": shortlist,
     }
 
 
@@ -407,7 +599,7 @@ PROMPT_TEMPLATE = (
     "- Choose signals ONLY from: analyst_upgrade_strong, earnings_beat, guidance_raise, "
     "analyst_upgrade, price_target_raised_major, price_target_raised, earnings_beat_minor, "
     "company_specific_news, momentum, secondary_beneficiary, sector_tailwind.\n"
-    "- Choose deductions ONLY from: sector_tailwind_only, mixed_signals, correlated_pick, "
+    "- Choose deductions ONLY from: sector_tailwind_only, mixed_signals, "
     "high_vix, late_week_entry.\n"
     "- Only assign the 'momentum' signal if PRICE CONTEXT shows that ticker's momentum is "
     "'confirmed'.\n"
@@ -615,14 +807,12 @@ def process_picks(parsed, data, portfolio, trades, rejected, today_str):
 
         if t not in SECTOR_MAP:
             rejected.append(_reject(p, today_str, "not_in_watchlist", conf, sigs, deds)); continue
-        if opened_today >= MAX_PICKS_PER_DAY:
+        if MAX_PICKS_PER_DAY is not None and opened_today >= MAX_PICKS_PER_DAY:
             rejected.append(_reject(p, today_str, "max_picks_reached", conf, sigs, deds)); continue
         if conf < CONFIDENCE_THRESHOLD:
             rejected.append(_reject(p, today_str, f"confidence_below_threshold: score={conf} < {CONFIDENCE_THRESHOLD}", conf, sigs, deds)); continue
         if t in portfolio.get("positions", {}):
             rejected.append(_reject(p, today_str, "already_held", conf, sigs, deds)); continue
-        if any(pos.get("sector") == sector for pos in portfolio.get("positions", {}).values()):
-            rejected.append(_reject(p, today_str, "sector_already_held", conf, sigs, deds)); continue
 
         price = prices.get(t)
         if not price:
@@ -796,7 +986,7 @@ def main():
         print("portfolio.json missing/empty - aborting.")
         return
 
-    data = gather_market_data()
+    data = gather_market_data(portfolio)
     print(f"News: {len(data['market_news'])} market + {len(data['company_news'])} company. "
           f"SPY={data['spy_trend']} VIX={data['vix']}")
 
