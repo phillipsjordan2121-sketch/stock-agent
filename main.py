@@ -34,7 +34,7 @@ GMAIL_APP_PASS    = os.environ.get("GMAIL_APP_PASS", "")
 RECIPIENT_EMAIL   = os.environ.get("RECIPIENT_EMAIL", GMAIL_USER)
 
 # -- Tunable parameters --------------------------------------------------------
-CLAUDE_MODEL            = "claude-haiku-4-5-20251001"
+CLAUDE_MODEL            = "claude-opus-4-8"
 FINNHUB_SLEEP           = 1.1
 MAX_PICKS_PER_DAY       = None    # None = no per-run cap; EXPOSURE_CEILING is the only limit on new buys
 CONFIDENCE_THRESHOLD    = 60
