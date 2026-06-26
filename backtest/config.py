@@ -34,7 +34,7 @@ MIN_HISTORY_BARS = 50      # need >=50 bars before a name is tradeable (50d MA)
 # ----------------------------------------------------------------------------
 # Entry gating + sizing -- mirrors main.py so backtest == live behaviour
 # ----------------------------------------------------------------------------
-CONFIDENCE_THRESHOLD    = 60
+CONFIDENCE_THRESHOLD    = 70
 EXPOSURE_CEILING        = 0.35
 MAX_SINGLE_POSITION_PCT = 0.10
 STARTING_CAPITAL        = 100_000.0
@@ -54,7 +54,7 @@ STOP_LOSS_PCT      = -0.07   # hard stop from entry
 PROFIT_LOCK_PCT    =  0.10   # NEW default +10% (was +25%)
 TRAILING_DROP_PCT  = -0.05   # trailing stop from peak
 PORTFOLIO_STOP_PCT = -0.08   # circuit breaker (pause new entries)
-HOLD_DAYS_MAX      = 5        # max trading-day hold (1-5 day swing)
+HOLD_DAYS_MAX      = 10       # max trading-day hold (extended 5->10 to let winners run)
 MOMENTUM_BREAK_ON_MA = True   # exit if close loses the 20-day MA
 
 # ----------------------------------------------------------------------------
@@ -78,7 +78,7 @@ SIGNAL_KEYS = ["trend", "momentum", "breakout", "volume"]
 # Walk-forward weight grid: every combo of these per-signal values that sums to
 # 1.0 (within tolerance). Coarse on purpose -- we want robust regions, not a
 # curve-fit peak.
-WEIGHT_GRID_VALUES = [0.0, 0.15, 0.25, 0.35, 0.50]
+WEIGHT_GRID_VALUES = [0.0, 0.15, 0.25, 0.35]
 
 # Minimum in-sample trades before a weight vector is eligible to be selected
 # (guards against picking a lucky vector that barely traded).
