@@ -1,0 +1,64 @@
+name: Phase 0 Backtest (manual)
+
+# Manual-only. NO schedule -> never runs on the daily cron, never overlaps the
+# live pipeline. Read-only permissions -> physically cannot commit/clobber the
+# live state files (portfolio.json / trades.json / etc). Results come back as a
+# downloadable artifact only.
+
+on:
+  workflow_dispatch:
+    inputs:
+      years:
+        description: "Years of history to backtest"
+        default: "2"
+        required: true
+      max_tickers:
+        description: "Cap universe size (0 = full watchlist)"
+        default: "0"
+        required: true
+      fast:
+        description: "Thin the weight grid for a quicker run"
+        type: boolean
+        default: false
+      probe_only:
+        description: "Only probe the Polygon tier, then stop"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read          # cannot write to the repo
+
+concurrency:
+  group: phase0-backtest
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backtest dependencies
+        run: pip install -r requirements-backtest.txt
+
+      - name: Run Phase 0 backtest
+        env:
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+        run: |
+          ARGS="--years ${{ inputs.years }} --max-tickers ${{ inputs.max_tickers }}"
+          if [ "${{ inputs.fast }}" = "true" ]; then ARGS="$ARGS --fast"; fi
+          if [ "${{ inputs.probe_only }}" = "true" ]; then ARGS="$ARGS --probe"; fi
+          echo "Running: python -m backtest.run_phase0 $ARGS"
+          python -m backtest.run_phase0 $ARGS
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase0-results
+          path: backtest/results/
+          if-no-files-found: warn
