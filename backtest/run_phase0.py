@@ -112,7 +112,7 @@ def main():
         "intraday_benefit": intra,
     }
     with open(os.path.join(RESULTS_DIR, "phase0_results.json"), "w") as f:
-        json.dump(results, f, indent=2)
+        json.dump(results, f, indent=2, default=lambda o: o.item() if hasattr(o, "item") else str(o))
 
     # equity curve csv
     with open(os.path.join(RESULTS_DIR, "equity_curve.csv"), "w") as f:
