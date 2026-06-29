@@ -191,5 +191,71 @@
     "deductions": [
       "sector_tailwind_only"
     ]
+  },
+  {
+    "ticker": "LRCX",
+    "date": "2026-06-29",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "price_target_raised_major",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "KLAC",
+    "date": "2026-06-29",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "price_target_raised_major",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "DT",
+    "date": "2026-06-29",
+    "rejection_reason": "confidence_below_threshold: score=25 < 60",
+    "confidence": 25,
+    "signals": [
+      "price_target_raised",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ICHR",
+    "date": "2026-06-29",
+    "rejection_reason": "confidence_below_threshold: score=25 < 60",
+    "confidence": 25,
+    "signals": [
+      "price_target_raised",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RKLB",
+    "date": "2026-06-29",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ZS",
+    "date": "2026-06-29",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
   }
 ]
