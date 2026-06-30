@@ -257,5 +257,79 @@
       "momentum"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "KTOS",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "LSCC",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "DELL",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TSM",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ANET",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MRVL",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ARM",
+    "date": "2026-06-30",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
   }
 ]
