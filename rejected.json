@@ -407,5 +407,37 @@
     "deductions": [
       "mixed_signals"
     ]
+  },
+  {
+    "ticker": "PSTG",
+    "date": "2026-07-02",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "LITE",
+    "date": "2026-07-02",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MU",
+    "date": "2026-07-02",
+    "rejection_reason": "confidence_below_threshold: score=0 < 60",
+    "confidence": 0,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": [
+      "mixed_signals"
+    ]
   }
 ]
