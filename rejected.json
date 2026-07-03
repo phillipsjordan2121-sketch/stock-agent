@@ -439,5 +439,15 @@
     "deductions": [
       "mixed_signals"
     ]
+  },
+  {
+    "ticker": "PSTG",
+    "date": "2026-07-03",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
   }
 ]
