@@ -449,5 +449,91 @@
       "momentum"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "WDC",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "momentum",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "STX",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "momentum",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TENB",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "momentum",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ANET",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TER",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "CRWD",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MPWR",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AAOI",
+    "date": "2026-07-06",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
   }
 ]
