@@ -535,5 +535,93 @@
       "momentum"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "LRCX",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "analyst_upgrade",
+      "price_target_raised"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ENTG",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "price_target_raised_major",
+      "price_target_raised"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ONTO",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ALGM",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "company_specific_news",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "SMTC",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "company_specific_news",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "IONQ",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "company_specific_news",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MU",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "analyst_upgrade_strong"
+    ],
+    "deductions": [
+      "mixed_signals"
+    ]
+  },
+  {
+    "ticker": "DOCN",
+    "date": "2026-07-07",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
   }
 ]
