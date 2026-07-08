@@ -623,5 +623,36 @@
       "momentum"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "NET",
+    "date": "2026-07-08",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TER",
+    "date": "2026-07-08",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RKLB",
+    "date": "2026-07-08",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
   }
 ]
