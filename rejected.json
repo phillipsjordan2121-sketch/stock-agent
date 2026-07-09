@@ -654,5 +654,105 @@
       "company_specific_news"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "AMAT",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=45 < 60",
+    "confidence": 45,
+    "signals": [
+      "analyst_upgrade_strong",
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "LRCX",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "analyst_upgrade_strong",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MU",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "analyst_upgrade_strong",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "STX",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "LITE",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ARM",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MRVL",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "WDC",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RMBS",
+    "date": "2026-07-09",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
   }
 ]
