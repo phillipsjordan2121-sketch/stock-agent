@@ -754,5 +754,49 @@
       "company_specific_news"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "SHOP",
+    "date": "2026-07-10",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ICHR",
+    "date": "2026-07-10",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "BRZE",
+    "date": "2026-07-10",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AEHR",
+    "date": "2026-07-10",
+    "rejection_reason": "confidence_below_threshold: score=5 < 60",
+    "confidence": 5,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": [
+      "late_week_entry"
+    ]
   }
 ]
