@@ -798,5 +798,80 @@
     "deductions": [
       "late_week_entry"
     ]
+  },
+  {
+    "ticker": "RGTI",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RMBS",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=25 < 60",
+    "confidence": 25,
+    "signals": [
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "IT",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "BRZE",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "GLOB",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RPD",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ASTS",
+    "date": "2026-07-14",
+    "rejection_reason": "confidence_below_threshold: score=0 < 60",
+    "confidence": 0,
+    "signals": [
+      "sector_tailwind",
+      "company_specific_news"
+    ],
+    "deductions": [
+      "sector_tailwind_only"
+    ]
   }
 ]
