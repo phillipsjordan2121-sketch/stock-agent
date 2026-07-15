@@ -873,5 +873,101 @@
     "deductions": [
       "sector_tailwind_only"
     ]
+  },
+  {
+    "ticker": "CRWD",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ZS",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AAOI",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "S",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "KTOS",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "QLYS",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "SMTC",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "MPWR",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TENB",
+    "date": "2026-07-15",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": []
   }
 ]
