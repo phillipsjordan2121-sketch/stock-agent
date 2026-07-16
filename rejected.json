@@ -969,5 +969,49 @@
       "momentum"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "AEHR",
+    "date": "2026-07-16",
+    "rejection_reason": "confidence_below_threshold: score=50 < 60",
+    "confidence": 50,
+    "signals": [
+      "earnings_beat",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "LCID",
+    "date": "2026-07-16",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "BABA",
+    "date": "2026-07-16",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "secondary_beneficiary",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "BILL",
+    "date": "2026-07-16",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
   }
 ]
