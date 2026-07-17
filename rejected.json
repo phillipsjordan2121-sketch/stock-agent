@@ -1013,5 +1013,67 @@
       "company_specific_news"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "LCID",
+    "date": "2026-07-17",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "IT",
+    "date": "2026-07-17",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "RDDT",
+    "date": "2026-07-17",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "SITM",
+    "date": "2026-07-17",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "NVTS",
+    "date": "2026-07-17",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AMKR",
+    "date": "2026-07-17",
+    "rejection_reason": "confidence_below_threshold: score=10 < 60",
+    "confidence": 10,
+    "signals": [
+      "company_specific_news"
+    ],
+    "deductions": []
   }
 ]
