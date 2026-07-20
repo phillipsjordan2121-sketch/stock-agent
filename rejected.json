@@ -1075,5 +1075,115 @@
       "company_specific_news"
     ],
     "deductions": []
+  },
+  {
+    "ticker": "LITE",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "COHR",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TER",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "WDC",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "BABA",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "momentum",
+      "analyst_upgrade_strong"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AEHR",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "momentum",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "SWKS",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "momentum",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "COHU",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "momentum",
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "CAMT",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "analyst_upgrade"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ACHR",
+    "date": "2026-07-20",
+    "rejection_reason": "confidence_below_threshold: score=0 < 60",
+    "confidence": 0,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": [
+      "sector_tailwind_only"
+    ]
   }
 ]
