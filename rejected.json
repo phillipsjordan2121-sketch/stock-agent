@@ -1185,5 +1185,83 @@
     "deductions": [
       "sector_tailwind_only"
     ]
+  },
+  {
+    "ticker": "MRVL",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "earnings_beat",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "LITE",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "TER",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "price_target_raised_major",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "GPN",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "BABA",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "NTGR",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "ACHR",
+    "date": "2026-07-21",
+    "rejection_reason": "confidence_below_threshold: score=0 < 60",
+    "confidence": 0,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": [
+      "sector_tailwind_only"
+    ]
   }
 ]
