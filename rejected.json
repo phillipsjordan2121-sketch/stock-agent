@@ -1263,5 +1263,61 @@
     "deductions": [
       "sector_tailwind_only"
     ]
+  },
+  {
+    "ticker": "LITE",
+    "date": "2026-07-22",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "earnings_beat",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "FORM",
+    "date": "2026-07-22",
+    "rejection_reason": "confidence_below_threshold: score=35 < 60",
+    "confidence": 35,
+    "signals": [
+      "analyst_upgrade_strong",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "DOCN",
+    "date": "2026-07-22",
+    "rejection_reason": "confidence_below_threshold: score=30 < 60",
+    "confidence": 30,
+    "signals": [
+      "analyst_upgrade",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "COHR",
+    "date": "2026-07-22",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "company_specific_news",
+      "momentum"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "AEHR",
+    "date": "2026-07-22",
+    "rejection_reason": "confidence_below_threshold: score=0 < 60",
+    "confidence": 0,
+    "signals": [
+      "momentum"
+    ],
+    "deductions": [
+      "sector_tailwind_only"
+    ]
   }
 ]
