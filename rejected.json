@@ -1319,5 +1319,27 @@
     "deductions": [
       "sector_tailwind_only"
     ]
+  },
+  {
+    "ticker": "SMCI",
+    "date": "2026-07-23",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
+  },
+  {
+    "ticker": "DELL",
+    "date": "2026-07-23",
+    "rejection_reason": "confidence_below_threshold: score=20 < 60",
+    "confidence": 20,
+    "signals": [
+      "momentum",
+      "company_specific_news"
+    ],
+    "deductions": []
   }
 ]
